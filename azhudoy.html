@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>enchigoriy's Combine List with Another List</title>
+</head>
+<body>
+  <h1>enchigoriy's Combine List with Another List by Chigori</h1>
+
+  <div id="list1">
+    <h2>List 1</h2>
+    <textarea id="text1" rows="3" placeholder="Input list"></textarea>
+    <button onclick="addToList(1)">Add</button>
+  </div>
+
+  <div id="list2">
+    <h2>List 2</h2>
+    <textarea id="text2" rows="3" placeholder="Input list"></textarea>
+    <button onclick="addToList(2)">Add</button>
+  </div>
+
+  <div id="combinedList">
+    <h2>Combined List</h2>
+    <ul id="output"></ul>
+    <button onclick="copyCombinedList()">Copy</button>
+  </div>
+
+  <script>
+    const list1 = [];
+    const list2 = [];
+
+    function addToList(listNumber) {
+      const textareaElement = document.getElementById(`text${listNumber}`);
+      const phrases = textareaElement.value.trim().split('\n');
+
+      if (phrases.length > 0) {
+        const list = listNumber === 1 ? list1 : list2;
+        list.push(...phrases);
+        textareaElement.value = '';
+
+        updateCombinedList();
+      }
+    }
+
+    function updateCombinedList() {
+      const combinedListElement = document.getElementById('output');
+      combinedListElement.innerHTML = '';
+
+      const length = Math.max(list1.length, list2.length);
+
+      for (let i = 0; i < length; i++) {
+        const item1 = list1[i] || '';
+        const item2 = list2[i] || '';
+        const combinedText = `${item1} = ${item2}`;
+
+        const liElement = document.createElement('li');
+        liElement.textContent = combinedText;
+        combinedListElement.appendChild(liElement);
+      }
+    }
+
+    function copyCombinedList() {
+      const combinedListElement = document.getElementById('output');
+      const combinedListText = Array.from(combinedListElement.children)
+        .map(li => li.textContent)
+        .join('\n');
+
+      navigator.clipboard.writeText(combinedListText)
+        .then(() => {
+          alert('Combined list copied to clipboard!');
+        })
+        .catch((error) => {
+          console.error('Failed to copy combined list:', error);
+        });
+    }
+  </script>
+</body>
+</html>
